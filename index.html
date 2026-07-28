@@ -291,7 +291,7 @@ R1CS/CCS Support — Extending Zinc+ with R1CS/CCS support via ideal checks.</p>
         <div class="step"><b>3 · Shared secret</b><span>S = e_A · E_B</span></div>
         <div class="step"><b>4 · Transcript</b><span>T = E_A ∥ E_B ∥ Cert_B</span></div>
         <div class="step"><b>5 · Key derivation</b><span>(K_enc, N) ← HKDF(S, H(T))</span></div>
-        <div class="step"><b>6 · Message</b><span>M = "This internship suits me."</span></div>
+        <div class="step"><b>6 · Message</b><span>M = "confidential"</span></div>
         <div class="step"><b>7 · Identity-binding signature</b><span>σ = Sign_skA(M ∥ E_A ∥ E_B)</span></div>
         <div class="step"><b>8 · Authenticated encryption</b><span>(C, Tag) = AES-256-GCM_Kenc(M ∥ σ, N)</span></div>
         <div class="step"><b>9 · Send</b><span>Cert_A, E_A, C, Tag</span></div>
