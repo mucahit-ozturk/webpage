@@ -268,10 +268,181 @@ R1CS/CCS Support — Extending Zinc+ with R1CS/CCS support via ideal checks.</p>
   </div>
 </section>
 
+<style>
+#challenge{
+  --bg:#EEF1FE;
+  --ink:#151B2E;
+  --ink2:#3D4666;
+  --mute:#6B7492;
+  --accent:#4A57D6;
+  --accent-2:#7C86E8;
+  --accent-soft:#E7EAFB;
+  --card:#FFFFFF;
+  --line:#E4E8F6;
+  --rail:#DCE1F2;
+  --wait:#8A92B0;
+  --wait-bg:#F5F7FF;
+  --wait-line:#CDD4EC;
+  --code:#5B6488;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  padding:56px 20px 64px;
+  -webkit-font-smoothing:antialiased;
+}
+#challenge *{box-sizing:border-box;}
+#challenge .wrap{max-width:980px;margin:0 auto;}
+
+#challenge .tag{
+  font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:12px;
+}
+#challenge h2{
+  font-size:clamp(30px,5vw,44px);line-height:1.05;font-weight:800;
+  letter-spacing:-.02em;margin:0 0 18px;color:var(--ink);
+}
+#challenge .prose{
+  font-size:17px;line-height:1.65;color:var(--ink2);max-width:70ch;margin:0 0 24px;
+}
+#challenge .prose b{color:var(--ink);font-weight:600;}
+
+#challenge .goals{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px;}
+#challenge .chip{
+  font-size:13.5px;font-weight:500;color:var(--ink2);
+  background:var(--accent-soft);border:1px solid var(--line);
+  padding:8px 14px;border-radius:999px;
+}
+
+#challenge .legend{
+  display:flex;flex-wrap:wrap;gap:16px 22px;align-items:center;
+  font-size:13px;color:var(--mute);margin:0 0 18px;padding:0 2px;
+}
+#challenge .legend span{display:inline-flex;align-items:center;gap:8px;}
+#challenge .dot{width:11px;height:11px;border-radius:3px;display:inline-block;}
+#challenge .dot.a{background:var(--accent);}
+#challenge .dot.b{background:var(--accent-2);}
+#challenge .dot.w{background:repeating-linear-gradient(45deg,var(--wait-line),var(--wait-line) 2px,transparent 2px,transparent 4px);border:1px solid var(--wait-line);}
+#challenge .dot.wire{background:transparent;border:1.5px solid var(--accent);}
+
+#challenge .tl{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:8px 22px 22px;box-shadow:0 1px 2px rgba(20,26,46,.03);
+}
+#challenge .cols{
+  display:grid;grid-template-columns:1fr 1fr;gap:26px;
+  padding:16px 4px 4px;position:sticky;top:0;background:var(--card);z-index:3;
+}
+#challenge .who{font-weight:700;font-size:15px;letter-spacing:-.01em;}
+#challenge .who .role{font-weight:500;color:var(--mute);}
+#challenge .who.a{color:var(--accent);}
+#challenge .who.b{color:var(--accent-2);}
+
+#challenge .phase{
+  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  margin:26px 0 12px;padding-top:16px;border-top:1px dashed var(--line);
+}
+#challenge .phase:first-of-type{border-top:none;padding-top:4px;}
+#challenge .phase .k{
+  font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--ink);
+}
+#challenge .phase .t{font-size:13px;color:var(--mute);}
+
+#challenge .lane{display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+
+#challenge .cell{position:relative;padding-left:20px;display:flex;flex-direction:column;gap:8px;min-height:44px;}
+#challenge .cell::before{
+  content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;
+  background:var(--rail);border-radius:2px;
+}
+#challenge .cell.b::before{background:linear-gradient(var(--rail),var(--rail));}
+
+#challenge .step{position:relative;}
+#challenge .step::before{
+  content:"";position:absolute;left:-18px;top:6px;width:9px;height:9px;border-radius:50%;
+  background:var(--card);border:2px solid var(--accent);
+}
+#challenge .cell.b .step::before{border-color:var(--accent-2);}
+#challenge .step b{display:block;font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+#challenge .step code{
+  display:block;font-family:var(--mono);font-size:12.5px;line-height:1.5;
+  color:var(--code);white-space:normal;word-break:break-word;
+}
+
+#challenge .cell.wait::before{
+  background:repeating-linear-gradient(var(--wait-line),var(--wait-line) 4px,transparent 4px,transparent 8px);
+}
+#challenge .waitbox{
+  font-size:12.5px;color:var(--wait);font-style:italic;
+  background:var(--wait-bg);border:1px dashed var(--wait-line);border-radius:10px;
+  padding:10px 12px;align-self:flex-start;
+}
+
+#challenge .wire{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin:16px 0 4px;padding:11px 16px;
+  background:var(--accent-soft);border:1px solid var(--line);border-radius:12px;
+}
+#challenge .wire .m{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);}
+#challenge .wire .dir{font-size:13px;font-weight:600;color:var(--ink);display:inline-flex;align-items:center;gap:6px;}
+#challenge .wire .dir svg{width:15px;height:15px;}
+#challenge .wire code{font-family:var(--mono);font-size:13px;color:var(--ink2);}
+#challenge .wire.rtl{flex-direction:row-reverse;text-align:right;}
+#challenge .wire.rtl .dir svg{transform:scaleX(-1);}
+
+#challenge .ledger{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px;}
+#challenge .led{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;}
+#challenge .led h4{margin:0 0 12px;font-size:13px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--accent);}
+#challenge .led .row{display:flex;flex-direction:column;gap:2px;margin-bottom:10px;}
+#challenge .led .row:last-child{margin-bottom:0;}
+#challenge .led .row .lbl{font-size:12px;font-weight:600;color:var(--mute);}
+#challenge .led code{font-family:var(--mono);font-size:12.5px;color:var(--ink2);}
+#challenge .led ul{margin:0;padding:0;list-style:none;}
+#challenge .led li{font-size:13px;line-height:1.5;color:var(--ink2);padding-left:16px;position:relative;margin-bottom:9px;}
+#challenge .led li:last-child{margin-bottom:0;}
+#challenge .led li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--accent-2);}
+#challenge .led li.none{color:var(--mute);font-style:italic;}
+#challenge .led li.none::before{background:transparent;border:1px solid var(--wait-line);}
+#challenge .led code b{color:var(--ink);font-weight:600;}
+
+#challenge .move{
+  margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:26px 28px;border-left:4px solid var(--accent);
+}
+#challenge .move h3{margin:0 0 12px;font-size:20px;font-weight:700;color:var(--ink);}
+#challenge .move p{font-size:15.5px;line-height:1.65;color:var(--ink2);margin:0 0 12px;}
+#challenge .move p:last-child{margin-bottom:0;}
+#challenge .move b{color:var(--ink);font-weight:600;}
+#challenge .move .hint{font-size:14px;color:var(--mute);}
+
+@media (max-width:720px){
+  #challenge .cols,#challenge .lane{grid-template-columns:1fr;gap:14px;}
+  #challenge .cols{position:static;}
+  #challenge .lane .cell.b{margin-top:2px;}
+  #challenge .ledger{grid-template-columns:1fr;}
+  #challenge .wire.rtl{flex-direction:row;text-align:left;}
+  #challenge .wire.rtl .dir svg{transform:none;}
+}
+@media (prefers-reduced-motion:reduce){#challenge *{scroll-behavior:auto;}}
+</style>
+
 <section id="challenge">
   <div class="wrap">
-    <div class="sec-head"><div class="tag">Cryptography Challenge</div><h2>Can you spot the weakness?</h2></div>
-    <p class="prose">A protocol I designed myself — a Secure Authenticated Message Protocol (Alice → Bob) built from standard primitives. It aims for confidentiality, integrity, authenticity, forward secrecy, replay protection and identity binding. There is one subtle security gap. Can you find what is missing to make it fully secure?</p>
+
+    <div class="tag">Cryptography Challenge</div>
+    <h2>Can you spot the weakness?</h2>
+
+    <p class="prose">
+      A protocol I designed myself — a Secure Authenticated Message Protocol
+      (<b>Alice → Bob</b>) built from standard primitives. The whole exchange is
+      exactly two messages. It aims for confidentiality, integrity, authenticity,
+      forward secrecy, replay protection and identity binding. Everything each side
+      computes, sends, and checks is written out below — and yet one of those six
+      goals is not actually achieved. Can you find what is missing?
+    </p>
 
     <div class="goals">
       <span class="chip">Confidentiality (AEAD)</span>
@@ -282,45 +453,141 @@ R1CS/CCS Support — Extending Zinc+ with R1CS/CCS support via ideal checks.</p>
       <span class="chip">Identity Binding</span>
     </div>
 
-    <div class="proto">
-      <div class="col">
-        <h3>Alice (Sender)</h3>
-        <div class="step"><b>0 · Long-term keys</b><span>Ed25519 (sk_A, pk_A), X.509 Cert_A</span></div>
-        <div class="step"><b>1 · Receive Bob's cert</b><span>Verify X.509, CA signature, revocation/expiry</span></div>
-        <div class="step"><b>2 · Ephemeral key (X25519)</b><span>Generate (e_A, E_A)</span></div>
-        <div class="step"><b>3 · Shared secret</b><span>S = e_A · E_B</span></div>
-        <div class="step"><b>4 · Transcript</b><span>T = E_A ∥ E_B ∥ Cert_B</span></div>
-        <div class="step"><b>5 · Key derivation</b><span>(K_enc, N) ← HKDF(S, H(T))</span></div>
-        <div class="step"><b>6 · Message</b><span>M = "confidential"</span></div>
-        <div class="step"><b>7 · Identity-binding signature</b><span>σ = Sign_skA(M ∥ E_A ∥ E_B)</span></div>
-        <div class="step"><b>8 · Authenticated encryption</b><span>(C, Tag) = AES-256-GCM_Kenc(M ∥ σ, N)</span></div>
-        <div class="step"><b>9 · Send</b><span>Cert_A, E_A, C, Tag</span></div>
+    <div class="legend">
+      <span><i class="dot a"></i> Alice computing</span>
+      <span><i class="dot b"></i> Bob computing</span>
+      <span><i class="dot w"></i> idle / blocked</span>
+      <span><i class="dot wire"></i> on the wire</span>
+    </div>
+
+    <div class="tl">
+      <div class="cols">
+        <div class="who a">Alice <span class="role">· Sender</span></div>
+        <div class="who b">Bob <span class="role">· Receiver</span></div>
       </div>
-      <div class="col">
-        <h3>Bob (Receiver)</h3>
-        <div class="step"><b>0 · Long-term keys</b><span>Ed25519 (sk_B, pk_B), X.509 Cert_B</span></div>
-        <div class="step"><b>1 · Ephemeral key (X25519)</b><span>Generate (e_B, E_B); send Cert_B, E_B</span></div>
-        <div class="step"><b>2 · Shared secret</b><span>S = e_B · E_A</span></div>
-        <div class="step"><b>3 · Transcript</b><span>T = E_A ∥ E_B ∥ Cert_B</span></div>
-        <div class="step"><b>4 · Key derivation</b><span>(K_enc, N) ← HKDF(S, H(T))</span></div>
-        <div class="step"><b>5 · Integrity check</b><span>Verify GCM Tag</span></div>
-        <div class="step"><b>6 · Decrypt</b><span>Recover M and σ</span></div>
-        <div class="step"><b>7 · Certificate check</b><span>Verify Cert_A, extract pk_A</span></div>
-        <div class="step"><b>8 · Signature check</b><span>Verify σ; ensure binding to E_A, E_B</span></div>
+
+      <div class="phase">
+        <span class="k">Setup</span>
+        <span class="t">Long-term identities, established offline — certificates issued by a CA</span>
+      </div>
+      <div class="lane">
+        <div class="cell a">
+          <div class="step"><b>Long-term keys</b><code>Ed25519 (sk_A, pk_A) · X.509 Cert_A</code></div>
+        </div>
+        <div class="cell b">
+          <div class="step"><b>Long-term keys</b><code>Ed25519 (sk_B, pk_B) · X.509 Cert_B</code></div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <span class="k">1 · Bob opens the session</span>
+        <span class="t">Bob speaks first, then blocks</span>
+      </div>
+      <div class="lane">
+        <div class="cell wait a">
+          <div class="waitbox">idle — Alice has received nothing yet</div>
+        </div>
+        <div class="cell b">
+          <div class="step"><b>Ephemeral key (X25519)</b><code>generate (e_B, E_B)</code></div>
+        </div>
+      </div>
+      <div class="wire rtl">
+        <span class="m">msg 1</span>
+        <span class="dir">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          Bob → Alice
+        </span>
+        <code>{ Cert_B, E_B }</code>
+      </div>
+
+      <div class="phase">
+        <span class="k">2 · Alice responds</span>
+        <span class="t">Alice runs her entire side in one burst while Bob waits</span>
+      </div>
+      <div class="lane">
+        <div class="cell a">
+          <div class="step"><b>Verify Bob's certificate</b><code>X.509 chain · CA signature · revocation / expiry</code></div>
+          <div class="step"><b>Ephemeral key (X25519)</b><code>generate (e_A, E_A)</code></div>
+          <div class="step"><b>Shared secret</b><code>S = e_A · E_B</code></div>
+          <div class="step"><b>Transcript</b><code>T = E_A ∥ E_B ∥ Cert_B</code></div>
+          <div class="step"><b>Key derivation</b><code>(K_enc, N) ← HKDF(S, H(T))</code></div>
+          <div class="step"><b>Message</b><code>M = "confidential"</code></div>
+          <div class="step"><b>Identity-binding signature</b><code>σ = Sign_skA(M ∥ E_A ∥ E_B)</code></div>
+          <div class="step"><b>Authenticated encryption</b><code>(C, Tag) = AES-256-GCM_Kenc(M ∥ σ, N)</code></div>
+        </div>
+        <div class="cell wait b">
+          <div class="waitbox">idle — Bob is blocked until Alice's reply arrives</div>
+        </div>
+      </div>
+      <div class="wire">
+        <span class="m">msg 2</span>
+        <span class="dir">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          Alice → Bob
+        </span>
+        <code>{ Cert_A, E_A, C, Tag }</code>
+      </div>
+
+      <div class="phase">
+        <span class="k">3 · Bob finalizes</span>
+        <span class="t">Bob wakes up, derives the key, then verifies</span>
+      </div>
+      <div class="lane">
+        <div class="cell wait a">
+          <div class="waitbox">done — Alice's side is closed</div>
+        </div>
+        <div class="cell b">
+          <div class="step"><b>Shared secret</b><code>S = e_B · E_A</code></div>
+          <div class="step"><b>Transcript</b><code>T = E_A ∥ E_B ∥ Cert_B</code></div>
+          <div class="step"><b>Key derivation</b><code>(K_enc, N) ← HKDF(S, H(T))</code></div>
+          <div class="step"><b>Integrity check</b><code>verify GCM Tag</code></div>
+          <div class="step"><b>Decrypt</b><code>recover M and σ</code></div>
+          <div class="step"><b>Certificate check</b><code>verify Cert_A → extract pk_A</code></div>
+          <div class="step"><b>Signature check</b><code>verify σ binds to E_A, E_B</code></div>
+        </div>
       </div>
     </div>
 
-    <div class="flow">
-      <div>Bob &#8594; Alice : Cert_B, E_B</div>
-      <div>Alice &#8594; Bob : Cert_A, E_A, C, Tag</div>
+    <div class="ledger">
+      <div class="led">
+        <h4>On the wire</h4>
+        <div class="row"><span class="lbl">msg 1 · Bob → Alice</span><code>Cert_B, E_B</code></div>
+        <div class="row"><span class="lbl">msg 2 · Alice → Bob</span><code>Cert_A, E_A, C, Tag</code></div>
+      </div>
+      <div class="led">
+        <h4>What Alice can verify</h4>
+        <ul>
+          <li>Cert_B is valid — chain, CA signature, not revoked or expired</li>
+          <li class="none">…and that is the entirety of Alice's inbound checking</li>
+        </ul>
+      </div>
+      <div class="led">
+        <h4>What Bob can verify</h4>
+        <ul>
+          <li>GCM Tag → ciphertext integrity under <code><b>K_enc</b></code></li>
+          <li>Cert_A is valid → obtains <code><b>pk_A</b></code></li>
+          <li>σ under pk_A → M is from Alice, bound to (E_A, E_B)</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="challenge">
+    <div class="move">
       <h3>Your move</h3>
-      <p>The protocol looks complete — but one of its stated security goals is not actually achieved. Think about what each party can really prove about the other, and what is (and is not) authenticated on the wire.</p>
+      <p>
+        Every phase is fully specified now: what each side computes, exactly what
+        crosses the wire, and exactly what each side checks on arrival. One of the
+        six stated goals still isn't met.
+      </p>
+      <p>
+        Trace it from <b>Alice's</b> point of view. When she finishes, what has she
+        actually proven about who is on the other end — and is anything she received
+        ever tied back to <b>Bob's</b> long-term identity?
+      </p>
       <p class="hint">Found it? I'd love to hear your answer — reach out below.</p>
     </div>
+
   </div>
+</section>
 </section>
 
 <section id="education" style="background:var(--bg2)">
